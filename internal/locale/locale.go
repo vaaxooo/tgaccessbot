@@ -7,14 +7,11 @@ import (
 	"path/filepath"
 )
 
-// The `Storage` struct represents a storage mechanism for
-// translations organized by language and key.
-// @property translations - The `translations` property in the
-// `Storage` struct is a map that stores language translations.
-// The keys of the outer map represent the language codes (e.g., "en"
-// for English, "fr" for French), and the values are inner maps. The
-// keys of the inner maps represent
+type Provider interface {
+	GetText(lang, key string) string
+}
 
+// The `Storage` struct is a storage for translations.
 type Storage struct {
 	translations map[string]map[string]string
 }
@@ -51,12 +48,16 @@ func (ls *Storage) LoadTranslations() {
 // The `GetText` method in the `Storage` struct is a function that retrieves a translation for a
 // given language and key.
 func (ls *Storage) GetText(lang, key string) string {
-	if translation, exists := ls.translations[lang][key]; exists {
-		return translation
+	if translations, exists := ls.translations[lang]; exists {
+		if translation, ok := translations[key]; ok {
+			return translation
+		}
 	}
 
-	if translation, exists := ls.translations["en"][key]; exists {
-		return translation
+	if translations, exists := ls.translations["en"]; exists {
+		if translation, ok := translations[key]; ok {
+			return translation
+		}
 	}
 
 	return key

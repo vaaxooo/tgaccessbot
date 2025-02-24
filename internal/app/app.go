@@ -1,43 +1,67 @@
 package app
 
-import (
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/vaaxooo/tgaccessbot/config"
-	"github.com/vaaxooo/tgaccessbot/internal/locale"
-	"github.com/vaaxooo/tgaccessbot/internal/services"
-	"github.com/vaaxooo/tgaccessbot/pkg/logger"
-)
+// App is a structure that contains the main components of the application.
+type App struct {
+	Logger             Logger
+	Bot                BotAPI
+	Subscription       SubscriptionService
+	LocaleStorage      LocaleProvider
+	TelegramChannels   []string
+	SuccessRedirectURL string
+}
 
 // NewApp creates a new instance of the App structure.
-func NewApp() *App {
-	// Load the configuration
-	config := config.MustLoadConfig()
-
-	// Initialize the logger
-	logger := logger.NewLogger(config.Debug)
-
-	// Initialize the locale storage
-	localeStorage := locale.NewStorage()
-	localeStorage.LoadTranslations()
-
-	// Initialize the Telegram bot
-	botAPI, err := tgbotapi.NewBotAPI(config.TelegramBotToken)
-	if err != nil {
-		logger.Error("❌ Error initializing Telegram bot: %v", err)
-		panic(err)
-	}
-
-	botAPI.Debug = config.Debug
-
-	// Initialize the subscription service
-	subService := services.NewSubscriptionService(logger, botAPI, config.TelegramChannels)
-
+func NewApp(
+	logger Logger,
+	bot BotAPI,
+	subService SubscriptionService,
+	localeProvider LocaleProvider,
+	channels []string,
+	successURL string,
+) *App {
 	return &App{
 		Logger:             logger,
-		Bot:                botAPI,
+		Bot:                bot,
 		Subscription:       subService,
-		LocaleStorage:      localeStorage,
-		TelegramChannels:   config.TelegramChannels,
-		SuccessRedirectURL: config.SuccessRedirectURL,
+		LocaleStorage:      localeProvider,
+		TelegramChannels:   channels,
+		SuccessRedirectURL: successURL,
 	}
 }
+
+// Start starts the application and listens for incoming updates.
+func (a *App) Start() {
+	a.Logger.Info("🚀 Bot successfully started")
+
+	u := a.Bot.NewUpdate(0)
+	u.Timeout = 60
+	updates := a.Bot.GetUpdatesChan(u)
+
+	for update := range updates {
+		if update.Message != nil {
+			a.HandleMessage(update)
+		} else if update.CallbackQuery != nil {
+			a.HandleCallbackQuery(update)
+		}
+	}
+}
+
+// func (a *App) toMessage(m *tgbotapi.Message) *Message {
+// 	return &Message{
+// 		ChatID:   m.Chat.ID,
+// 		UserID:   m.From.ID,
+// 		Text:     m.Text,
+// 		Language: m.From.LanguageCode,
+// 		Command:  m.Command(),
+// 	}
+// }
+
+// func (a *App) toCallbackQuery(q *tgbotapi.CallbackQuery) *CallbackQuery {
+// 	return &CallbackQuery{
+// 		ChatID:   q.Message.Chat.ID,
+// 		UserID:   q.From.ID,
+// 		Data:     q.Data,
+// 		QueryID:  q.ID,
+// 		Language: q.From.LanguageCode,
+// 	}
+// }
