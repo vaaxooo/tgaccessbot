@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 // The `Storage` struct represents a storage mechanism for
@@ -30,7 +31,7 @@ func (ls *Storage) LoadTranslations() {
 	languages := []string{"en", "ru"}
 
 	for _, lang := range languages {
-		filePath := fmt.Sprintf("locales/%s.json", lang)
+		filePath := filepath.Join("assets", "locales", lang+".json")
 
 		file, err := os.ReadFile(filePath)
 		if err != nil {

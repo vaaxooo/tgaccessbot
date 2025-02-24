@@ -3,9 +3,9 @@ package config
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
-	"github.com/vaaxooo/tgaccessbot/pkg/helpers"
 )
 
 // Config struct contains the configuration of the application.
@@ -22,12 +22,10 @@ func MustLoadConfig() *Config {
 		panic(fmt.Errorf("error loading .env file: %w", err))
 	}
 
-	telegramChannels := helpers.SplitString(os.Getenv("TELEGRAM_CHANNELS"), ",")
-
 	return &Config{
-		Debug:              os.Getenv("DEBUG") == "true",
+		Debug:              strings.ToLower(os.Getenv("DEBUG")) == "true",
 		TelegramBotToken:   os.Getenv("TELEGRAM_BOT_TOKEN"),
-		TelegramChannels:   telegramChannels,
+		TelegramChannels:   strings.Split(os.Getenv("TELEGRAM_CHANNELS"), ","),
 		SuccessRedirectURL: os.Getenv("SUCCESS_REDIRECT_URL"),
 	}
 }
