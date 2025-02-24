@@ -2,8 +2,8 @@ package helpers
 
 import "strings"
 
-// SplitValue splits a string by a separator
-func SplitValue(value string, separator string) []string {
+// SplitValue splits a string by a separator.
+func SplitString(value string, separator string) []string {
 	if value == "" {
 		return []string{}
 	}
@@ -19,5 +19,6 @@ func Contains(slice []string, item string) bool {
 			return true
 		}
 	}
+
 	return false
 }

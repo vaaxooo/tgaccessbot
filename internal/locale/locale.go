@@ -6,38 +6,57 @@ import (
 	"os"
 )
 
-// Locales - map of translations
-var Locales = make(map[string]map[string]string)
+// The `Storage` struct represents a storage mechanism for
+// translations organized by language and key.
+// @property translations - The `translations` property in the
+// `Storage` struct is a map that stores language translations.
+// The keys of the outer map represent the language codes (e.g., "en"
+// for English, "fr" for French), and the values are inner maps. The
+// keys of the inner maps represent
 
-// LoadTranslations loads translations from files
-func LoadTranslations() error {
+type Storage struct {
+	translations map[string]map[string]string
+}
+
+// The NewLocaleStorage function initializes a new Storage instance with an empty translations
+// map.
+func NewStorage() *Storage {
+	return &Storage{translations: make(map[string]map[string]string)}
+}
+
+// The `LoadTranslations` method in the `Storage` struct is responsible for loading translations
+// from JSON files for different languages.
+func (ls *Storage) LoadTranslations() {
 	languages := []string{"en", "ru"}
 
 	for _, lang := range languages {
 		filePath := fmt.Sprintf("locales/%s.json", lang)
+
 		file, err := os.ReadFile(filePath)
 		if err != nil {
-			return fmt.Errorf("not found locale %s: %w", filePath, err)
+			panic(fmt.Errorf("locale file not found: %s, error: %w", filePath, err))
 		}
 
 		var translations map[string]string
+
 		if err := json.Unmarshal(file, &translations); err != nil {
-			return fmt.Errorf("error while unmarshalling locale %s: %w", filePath, err)
+			panic(fmt.Errorf("error unmarshalling locale %s: %w", filePath, err))
 		}
 
-		Locales[lang] = translations
+		ls.translations[lang] = translations
 	}
-
-	return nil
 }
 
-// GetText returns translation by key
-func GetText(lang, key string) string {
-	if translation, exists := Locales[lang][key]; exists {
+// The `GetText` method in the `Storage` struct is a function that retrieves a translation for a
+// given language and key.
+func (ls *Storage) GetText(lang, key string) string {
+	if translation, exists := ls.translations[lang][key]; exists {
 		return translation
 	}
-	if translation, exists := Locales["en"][key]; exists {
+
+	if translation, exists := ls.translations["en"][key]; exists {
 		return translation
 	}
+
 	return key
 }

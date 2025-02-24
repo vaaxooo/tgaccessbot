@@ -2,15 +2,16 @@ package bot
 
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/vaaxooo/tgaccessbot/pkg/logger"
+	"github.com/vaaxooo/tgaccessbot/internal/app"
 )
 
 // The `sendMessage` function in Go sets the message parse mode to Markdown and sends the message using
 // a Telegram bot API.
-func sendMessage(bot *tgbotapi.BotAPI, message tgbotapi.MessageConfig) {
+func SendMessage(app *app.App, message tgbotapi.MessageConfig) {
 	message.ParseMode = "Markdown"
-	_, err := bot.Send(message)
+
+	_, err := app.Bot.Send(message)
 	if err != nil {
-		logger.Error("❌ Error sending message: %v", err)
+		app.Logger.Error("❌ Error sending message: %v", err)
 	}
 }

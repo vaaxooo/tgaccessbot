@@ -5,40 +5,48 @@ import (
 	"os"
 )
 
-var Logger *slog.Logger
+type Service struct {
+	logger *slog.Logger
+}
 
-// InitLogger initializes the logger
-func InitLogger(debug bool) {
-
+// InitLogger initializes the logger.
+func NewLogger(debug bool) *Service {
+	var logHandler slog.Handler
 	if debug {
-		Logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-			Level: slog.LevelDebug,
-		}))
+		logHandler = slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			AddSource:   true,
+			Level:       slog.LevelInfo,
+			ReplaceAttr: nil,
+		})
 	} else {
-		Logger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-			Level: slog.LevelInfo,
-		}))
+		logHandler = slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+			AddSource:   true,
+			Level:       slog.LevelInfo,
+			ReplaceAttr: nil,
+		})
 	}
 
-	Info("✅ Logger successfully initialized")
+	return &Service{
+		logger: slog.New(logHandler),
+	}
 }
 
-// Debug logs a debug message
-func Debug(msg string, args ...any) {
-	Logger.Debug(msg, args...)
+// Debug logs a debug message.
+func (l *Service) Debug(msg string, args ...any) {
+	l.logger.Debug(msg, args...)
 }
 
-// Info logs an informational message
-func Info(msg string, args ...any) {
-	Logger.Info(msg, args...)
+// Info logs an informational message.
+func (l *Service) Info(msg string, args ...any) {
+	l.logger.Info(msg, args...)
 }
 
-// Warn logs a warning message
-func Warn(msg string, args ...any) {
-	Logger.Warn(msg, args...)
+// Warn logs a warning message.
+func (l *Service) Warn(msg string, args ...any) {
+	l.logger.Warn(msg, args...)
 }
 
-// Error logs an error message
-func Error(msg string, args ...any) {
-	Logger.Error(msg, args...)
+// Error logs an error message.
+func (l *Service) Error(msg string, args ...any) {
+	l.logger.Error(msg, args...)
 }

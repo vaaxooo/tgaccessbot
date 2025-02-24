@@ -7,5 +7,6 @@
     "not_subscribed_message": "🚫 *You haven't subscribed yet!* Subscribe to the channel below to gain access. ⬇️",
     "unknown_command_message": "🤔 Hmm... I don't recognize that command. Try again or use /help.",
     "checking_subscription": "⏳ Checking your subscription...",
-    "success_button": "🔓 Get access"
+    "success_button": "🔓 Get access",
+    "access_is_open": "🎉 Access is open!"
 }
