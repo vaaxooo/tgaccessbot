@@ -74,5 +74,3 @@ The bot supports **multiple languages**. Localization files are stored in `/loca
 ## 📩 Contact
 🔗 [GitHub](https://github.com/vaaxooo)  
 📩 Email: vaaxooo@gmail.com
-
-Now your `README.md` includes **installation, commands, project description**! 🚀
