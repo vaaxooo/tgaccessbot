@@ -57,7 +57,7 @@ go run cmd/main.go
 The bot supports **multiple languages**. Localization files are stored in `/locales/` and contain JSON files:
 
 ```
-/locales/
+/assets/locales/
 ├── en.json  # English
 ├── ru.json  # Russian
 ```
