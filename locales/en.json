@@ -1,0 +1,11 @@
+{
+    "start_message": "👋 *Hey there!* I'm your assistant for accessing *exclusive content*.\n*Subscribe* to the channel and use /check to verify your subscription. 🚀",
+    "subscribe_button": "📢 Subscribe to",
+    "check_button": "🔍 Check Subscription",
+    "error_message": "❗️ *Oops!* Something went wrong. Please try again later or contact support.",
+    "subscribed_message": "🎉 *Awesome!* You're subscribed and now have access to *exclusive content*! 🔥",
+    "not_subscribed_message": "🚫 *You haven't subscribed yet!* Subscribe to the channel below to gain access. ⬇️",
+    "unknown_command_message": "🤔 Hmm... I don't recognize that command. Try again or use /help.",
+    "checking_subscription": "⏳ Checking your subscription...",
+    "success_button": "🔓 Get access"
+}
